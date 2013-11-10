@@ -73,15 +73,15 @@ newCustomerArrives alpha gen = do
 startNewTable :: PrimMonad m => StateT Restaurant m ()
 startNewTable = do
   numberOfTables    %= succ
-  nt <- use numberOfTables
+  nt                <- use numberOfTables
   seatingPlan       %= (at nt ?~ 1)
   numberOfCustomers %= succ
 
 -- | Join an existing table.
 joinExistingTable :: PrimMonad m => Gen (PrimState m) -> StateT Restaurant m ()
 joinExistingTable gen = do
-  restaurant  <- get
-  chosenTable <- lift $ sampleFromRestaurant restaurant gen
+  restaurant        <- get
+  chosenTable       <- lift $ sampleFromRestaurant restaurant gen
   seatingPlan       %= (ix chosenTable %~ succ)
   numberOfCustomers %= succ
 
@@ -100,8 +100,8 @@ sampleFromRestaurant restaurant gen = do
 
 -- | Observe a CRP.
 observeProcess :: ProcessParameters -> IO ()
-observeProcess parameters = withSystemRandom . asGenIO $ \g -> 
-  chineseRestaurantProcess parameters g >>= print
+observeProcess parameters = withSystemRandom . asGenIO $ 
+  chineseRestaurantProcess parameters >=> print
 
 -- | An empty restaurant.
 emptyRestaurant :: Restaurant
