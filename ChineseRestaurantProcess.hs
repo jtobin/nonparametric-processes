@@ -33,13 +33,13 @@ makeLenses ''Restaurant
 
 instance Show Restaurant where
   show restaurant = intercalate "\n" $ outputMap^..folded where 
-    output j x = "table " ++ show j ++ ": " ++ printf "%0.2f" (x :: Double)
+    output j x = "table " ++ show j ++ ": " ++ printf "%0.4f" (x :: Double)
     outputMap  = imap output asProbs
     asProbs    = scaleBy (restaurant^.numberOfCustomers)
                      <$> (restaurant^.seatingPlan)
 
 -- | Chinese Restaurant Process.
-chineseRestaurantProcess 
+chineseRestaurantProcess
   :: PrimMonad m
   => ProcessParameters
   -> Gen (PrimState m)
@@ -119,10 +119,10 @@ scaleBy z = (/ fromIntegral z) . fromIntegral
 commandLineOptions :: Parser ProcessParameters
 commandLineOptions = ProcessParameters
   <$> option ( long "customers"
-            <> short 'c'
+            <> short 'n'
             <> help "Number of customers to observe" )
   <*> option ( long "dispersion"
-            <> short 'd'
+            <> short 'a'
             <> help "CRP dispersion parameter" )
 
 main :: IO ()
